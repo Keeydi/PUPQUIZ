@@ -217,7 +217,7 @@ export default function Authenticated({ header, children, }) {
 
           header &&
             _jsx("header", {
-              className: "bg-yellow-200 shadow mt-16",
+              className: "bg-yellow-200 shadow mt-16 border border-yellow-400 rounded-md shadow-md",
               children: _jsx("div", {
                 className: "max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8",
                 children: header,
@@ -225,7 +225,7 @@ export default function Authenticated({ header, children, }) {
             }),
 
           _jsx("main", {
-            className: "flex-1 p-4 mt-16",
+            className: "flex-1 p-4 mt-16 bg-white",
             children: children,
           }),
         ],

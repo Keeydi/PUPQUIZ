@@ -181,7 +181,7 @@ export default function Authenticated({
 
                 {/* Header (optional) */}
                 {header && (
-                    <header className="bg-yellow-200 shadow mt-16">
+                    <header className="bg-yellow-200 shadow mt-16 border border-yellow-400 rounded-md shadow-md">
                         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             {header}
                         </div>
@@ -189,7 +189,7 @@ export default function Authenticated({
                 )}
 
                 {/* Main content */}
-                <main className="flex-1 p-4 mt-16">{children}</main>
+                <main className="flex-1 p-4 mt-16 bg-white">{children}</main>
             </div>
         </div>
     );
