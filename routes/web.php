@@ -109,13 +109,33 @@ Route::get('/session-history', function () {
         
         $logs = $query->get()
             ->map(function ($log) {
+                // Handle created_at - check if it's already a string or a Carbon instance
+                $createdAt = null;
+                if ($log->created_at) {
+                    if (is_string($log->created_at)) {
+                        $createdAt = $log->created_at;
+                    } else {
+                        $createdAt = $log->created_at->toISOString();
+                    }
+                }
+                
+                // Handle logout_timestamp - check if it's already a string or a Carbon instance
+                $logoutTimestamp = null;
+                if ($log->logout_timestamp) {
+                    if (is_string($log->logout_timestamp)) {
+                        $logoutTimestamp = $log->logout_timestamp;
+                    } else {
+                        $logoutTimestamp = $log->logout_timestamp->toISOString();
+                    }
+                }
+                
                 return [
                     'id' => $log->id,
                     'user_id' => $log->user_id,
                     'user_name' => $log->user->name ?? 'Unknown',
                     'ip_address' => $log->ip_address ?? 'N/A',
-                    'created_at' => $log->created_at ? $log->created_at->toISOString() : null,
-                    'logout_timestamp' => $log->logout_timestamp ? $log->logout_timestamp->toISOString() : null,
+                    'created_at' => $createdAt,
+                    'logout_timestamp' => $logoutTimestamp,
                 ];
             });
 
