@@ -660,9 +660,13 @@ export default function SubjectQuestionForm() {
             // Ensure it's always a string, not null or undefined, to avoid validation errors
             if (question.type === 'short-answer') {
                 // Ensure shortAnswer is always a string (empty string if not provided)
-                quizData.shortAnswer = (question.shortAnswer && typeof question.shortAnswer === 'string') 
+                const trimmedAnswer = (question.shortAnswer && typeof question.shortAnswer === 'string') 
                     ? question.shortAnswer.trim() 
                     : '';
+                
+                // Backend requires min:1, so if empty, it will show validation error
+                // But we still send it as empty string to trigger proper validation message
+                quizData.shortAnswer = trimmedAnswer;
             }
             
             quizes_questions.push(quizData)
@@ -695,13 +699,28 @@ export default function SubjectQuestionForm() {
                 },
                 onError: (errors) => {
                     console.error('Error saving quiz:', errors);
+                    
+                    // Extract error messages for better user feedback
+                    let errorMessage = 'Error saving quiz. Please check your inputs.';
+                    if (errors && typeof errors === 'object') {
+                        const errorKeys = Object.keys(errors);
+                        if (errorKeys.length > 0) {
+                            const firstError = errors[errorKeys[0]];
+                            if (Array.isArray(firstError) && firstError.length > 0) {
+                                errorMessage = firstError[0];
+                            } else if (typeof firstError === 'string') {
+                                errorMessage = firstError;
+                            }
+                        }
+                    }
+                    
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
                         icon: 'error',
-                        title: 'Error saving quiz. Please check your inputs.',
+                        title: errorMessage,
                         showConfirmButton: false,
-                        timer: 3000,
+                        timer: 5000,
                         timerProgressBar: true,
                     });
                 },
