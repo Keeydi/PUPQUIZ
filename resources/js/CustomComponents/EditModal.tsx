@@ -401,6 +401,7 @@ export default function EditModal(props: Props) {
                             )}
                         </div>
 
+                        </div>
                     </div>
                 </div>
             </DialogContent>

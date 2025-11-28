@@ -446,13 +446,28 @@ export default function CreateQuizPage() {
             },
             onError: (errors) => {
                 console.error('Error saving quiz:', errors);
+                
+                // Extract error messages for better user feedback
+                let errorMessage = 'Error saving quiz. Please check your inputs.';
+                if (errors && typeof errors === 'object') {
+                    const errorKeys = Object.keys(errors);
+                    if (errorKeys.length > 0) {
+                        const firstError = errors[errorKeys[0]];
+                        if (Array.isArray(firstError) && firstError.length > 0) {
+                            errorMessage = firstError[0];
+                        } else if (typeof firstError === 'string') {
+                            errorMessage = firstError;
+                        }
+                    }
+                }
+                
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
                     icon: 'error',
-                    title: 'Error saving quiz. Please check your inputs.',
+                    title: errorMessage,
                     showConfirmButton: false,
-                    timer: 3000,
+                    timer: 5000,
                     timerProgressBar: true,
                 });
             },

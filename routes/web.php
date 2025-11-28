@@ -109,13 +109,33 @@ Route::get('/session-history', function () {
         
         $logs = $query->get()
             ->map(function ($log) {
+                // Handle created_at - check if it's already a string or a Carbon instance
+                $createdAt = null;
+                if ($log->created_at) {
+                    if (is_string($log->created_at)) {
+                        $createdAt = $log->created_at;
+                    } else {
+                        $createdAt = $log->created_at->toISOString();
+                    }
+                }
+                
+                // Handle logout_timestamp - check if it's already a string or a Carbon instance
+                $logoutTimestamp = null;
+                if ($log->logout_timestamp) {
+                    if (is_string($log->logout_timestamp)) {
+                        $logoutTimestamp = $log->logout_timestamp;
+                    } else {
+                        $logoutTimestamp = $log->logout_timestamp->toISOString();
+                    }
+                }
+                
                 return [
                     'id' => $log->id,
                     'user_id' => $log->user_id,
                     'user_name' => $log->user->name ?? 'Unknown',
                     'ip_address' => $log->ip_address ?? 'N/A',
-                    'created_at' => $log->created_at ? $log->created_at->toISOString() : null,
-                    'logout_timestamp' => $log->logout_timestamp ? $log->logout_timestamp->toISOString() : null,
+                    'created_at' => $createdAt,
+                    'logout_timestamp' => $logoutTimestamp,
                 ];
             });
 
@@ -263,7 +283,7 @@ Route::get('/manage-pre-registration/{lobby_code}', function ($lobby_code) {
     ]);
 })->name('manage-pre-registration');
 
-Route::post('/manage-pre-registration', [ParticipantController::class, "managePreRegistration"])->name('manage-pre-registration');
+Route::post('/manage-pre-registration', [ParticipantController::class, "managePreRegistration"])->name('manage-pre-registration.show');
 // Route::get('/lobby/{id}/{subject_id}/{team_id}', function ($id, $subject_id,$team_id) {
 //     $subject = Subjects::where('id', $subject_id)
 //     ->get();
@@ -621,7 +641,7 @@ Route::get('/quizzes/{quiz}/live', function (App\Models\Quiz $quiz) {
 })->name('quizzes.live_session');
 require __DIR__ . '/auth.php';
 
-Route::post('/participant', [ParticipantController::class, 'store'])->name('participant');
+Route::post('/participant', [ParticipantController::class, 'store'])->name('participant.post');
 Route::post('/participant/verify-team', [ParticipantController::class, 'verify'])->name('participant.verify-team');
 
 
@@ -721,9 +741,12 @@ Route::get('/questionnaire/{id}/{team_id}/{subject_id}', function ($id, $team_id
         ->where("archive", 0)
         ->firstOrFail();
 
-    // Check if event start_date is in the future - show EventReminder
-    if ($lobby_event_now->start_date) {
-        $start = Carbon::parse($lobby_event_now->start_date)->setTimezone('Asia/Manila');
+    // Check if subject start_date is in the future - show EventReminder
+    // Subject start_date takes precedence over lobby start_date (consistent with lobby route)
+    $startDateToCheck = $subject->start_date ?? $lobby_event_now->start_date;
+    
+    if ($startDateToCheck) {
+        $start = Carbon::parse($startDateToCheck)->setTimezone('Asia/Manila');
         
         if ($now->lessThan($start)) {
             $diff = $now->diff($start); // DateInterval object
@@ -870,7 +893,7 @@ Route::get('/leaderboard/{id}/{subject_id}', [ParticipantController::class, 'lea
 Route::get('/currentQuestionLeaderboard/{id}/{question_id}', [ParticipantController::class, 'currentQuestionLeaderboard'])->name('currentQuestionLeaderboard');
 Route::get('/participant-code-update/{id}/{code}', [ParticipantController::class, 'updateTeamCode'])->name('participant-code-update');
 Route::get('/participant-shor-answer/{id}/{subject_id}', [ParticipantController::class, 'shortAnswer'])->name('participant-shor-answer');
-Route::post('/participant-answer-update', [ParticipantController::class, 'updateAns'])->name('participant-shor-answer');
+Route::post('/participant-answer-update', [ParticipantController::class, 'updateAns'])->name('participant-shor-answer.post');
 
 Route::get('/report/teams/excel/{lobby_id}/{subject_id}', [ReportController::class, 'downloadTeamsReport']);
 Route::get('/report/lobby-management/{lobby_id?}', [ReportController::class, 'downloadLobbyManagementReport'])->name('report.lobby-management');

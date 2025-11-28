@@ -153,6 +153,7 @@ export default function Authenticated({ header, children, }) {
           _jsxs("div", {
             className:
               "fixed top-0 left-0 right-0 h-16 px-4 bg-yellow-200 shadow z-30 flex items-center justify-between",
+            style: { background: "linear-gradient(to right,rgb(255, 226, 82), #FBEB8A)"},
             children: [
               _jsx("button", {
                 onClick: () =>  {!user ? {} :setSidebarOpen(!sidebarOpen) },

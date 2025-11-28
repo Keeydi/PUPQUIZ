@@ -125,7 +125,11 @@ export default function Authenticated({
             {/* Main content wrapper */}
             <div className="flex-1 flex flex-col" style={{ marginLeft: sidebarOpen ? '16rem' : '0' }}>
                 {/* Top navbar */}
-                <div className="fixed top-0 left-0 right-0 h-16 px-4 bg-yellow-200 shadow z-30 flex items-center justify-between">
+                <div className="fixed top-0 left-0 right-0 h-16 px-4 shadow z-30 flex items-center justify-between"
+                    style={{
+                    background: "linear-gradient(to right, rgb(255, 226, 82), #FBEB8A)",
+                    }}
+                >
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                         className="focus:outline-none"
