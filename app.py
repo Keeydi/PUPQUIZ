@@ -432,6 +432,9 @@ def health_check():
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8800))
-    print(f"Starting Quiz Generation API server on http://localhost:{port}")
-    app.run(debug=True, port=port, host='0.0.0.0')
+    debug_mode = os.getenv('APP_ENV', 'production') == 'development'
+    print(f"Starting Quiz Generation API server on http://0.0.0.0:{port}")
+    print(f"Debug mode: {debug_mode}")
+    print(f"API Key configured: {'Yes' if API_KEY else 'No'}")
+    app.run(debug=debug_mode, port=port, host='0.0.0.0', threaded=True)
 
