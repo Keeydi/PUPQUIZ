@@ -12,18 +12,18 @@ const Home = (props: Props) => {
         {
             image: '/images/carousel/slide1.png',
             title: '',
-            description: 'Create, share, and play quizzes whenever and wherever you want.'
+            description: 'Create, share, and play quizzes whenever and wherever you want.',
         },
         {
             image: '/images/carousel/slide2.png',
             title: '',
-            description: 'Make quizzes fun and interesting to boost up your knowledge.'
+            description: 'Make quizzes fun and interesting to boost up your knowledge.',
         },
         {
             image: '/images/carousel/slide3.png',
             title: '',
-            description: "Play and take quiz challenges with your friends."
-        }
+            description: 'Play and take quiz challenges with your friends.',
+        },
     ];
 
     useEffect(() => {
@@ -48,9 +48,9 @@ const Home = (props: Props) => {
     if (isLoading) {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
-                {/* Background Image */}
+                {/* Fixed Local Background Image */}
                 <img
-                    src="https://i.ibb.co/vCS1cLvs/Screenshot-2025-04-14-142453.png"
+                    src="/images/PUPBG.png"
                     alt="Loading Background"
                     className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -68,8 +68,14 @@ const Home = (props: Props) => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 pt-0" style={{ width: "100%" }}>
-            <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between max-w-7xl gap-8" style={{ width: "100%", maxWidth: "100%" }}>
+        <div
+            className="min-h-screen flex items-center justify-center bg-gray-100 p-4 pt-0"
+            style={{ width: '100%' }}
+        >
+            <div
+                className="container mx-auto flex flex-col lg:flex-row items-center justify-between max-w-7xl gap-8"
+                style={{ width: '100%', maxWidth: '100%' }}
+            >
                 {/* Image Section */}
                 <div className="flex-1 flex flex-col items-center w-auto lg:w-auto">
                     <div className="relative w-full flex justify-center">
@@ -91,13 +97,13 @@ const Home = (props: Props) => {
                     </div>
 
                     {/* Description */}
-                    <p className="font-bold text-xl lg:text-3xl text-gray-600 text-center mb-6 transition-all duration-500 min-h-[3em] max-w-xl px-4">
+                    <p className="font-semi,bold text-xl lg:text-3xl text-gray-600 text-center mb-6 transition-all duration-500 min-h-[3em] max-w-xl px-4">
                         {content[currentIndex].description}
                     </p>
                 </div>
 
                 {/* Button Section */}
-                <div className="flex-1 flex flex-col items-center w-full lg:max-w-md" style={{ maxWidth: "50%" }}>
+                <div className="flex-1 flex flex-col items-center w-full lg:max-w-md" style={{ maxWidth: '50%' }}>
                     {/* Logo */}
                     <div>
                         <img
@@ -118,7 +124,7 @@ const Home = (props: Props) => {
                     <Link
                         href="/getStarted"
                         className="font-bold w-[80%] py-3 lg:py-4 bg-[#FF2C19] text-white text-center rounded-full hover:bg-[#e52913] transition-colors text-2xl lg:text-xl mb-3"
-                        style={{ boxShadow: '0px 4px 10px 0px #9D1509', fontSize: "1.5rem", padding: "2rem" }}
+                        style={{ boxShadow: '0px 4px 10px 0px #9D1509', fontSize: '1.5rem', padding: '2rem' }}
                     >
                         GET STARTED
                     </Link>
@@ -127,7 +133,7 @@ const Home = (props: Props) => {
                     <Link
                         href="/login"
                         className="font-bold w-[80%] py-3 lg:py-4 bg-[#FFCCC8] text-[#FF2C19] text-center rounded-full hover:bg-pink-300 transition-colors text-lg lg:text-xl"
-                        style={{ boxShadow: '0px 4px 10px 0px #FF8E84', fontSize: "1.5rem", padding: "2rem" }}
+                        style={{ boxShadow: '0px 4px 10px 0px #FF8E84', fontSize: '1.5rem', padding: '2rem' }}
                     >
                         I ALREADY HAVE AN ACCOUNT
                     </Link>
