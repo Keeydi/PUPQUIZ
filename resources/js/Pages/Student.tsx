@@ -25,12 +25,14 @@ const Form = (props: Props) => {
         email: "",
         password: "",
     });
+    
 
     interface FormField {
         name: keyof typeof formData;
         label: string;
         type: string;
         placeholder?: string;
+        options?: { label: string; value: string }[]; 
     }
 
     const [passwordStrength, setPasswordStrength] = useState<PasswordStrength | null>(null);
@@ -296,7 +298,24 @@ const Form = (props: Props) => {
             fields: [
                 { name: "fullName", label: "Full Name", type: "text", placeholder: "Last Name, First Name M.I" },
                 { name: "studentNumber", label: "Student Number", type: "text", placeholder: "e.g., 2021-000000-TG-0" },
-                { name: "program", label: "Program", type: "text", placeholder: "e.g., BS in Information Technology" },
+                { 
+                    name: "program", 
+                    label: "Program", 
+                    type: "select", 
+                    placeholder: " Select your Program",
+                    options: [
+                        { label: "BS in Electronics Engineering (BSECE)", value: "BSECE" },
+                        { label: "BS in Mechanical Engineering (BSME)", value: "BSME" },
+                        { label: "BS in Business Administration Major in Human Resource Development Management (BSBA-HRDM)", value: "BSBA-HRDM" },
+                        { label: "BS in Business Administration Major in Marketing Management (BSBA-MM)", value: "BSBA-MM" },
+                        { label: "BS in Information Technology (BSIT)", value: "BSIT" },
+                        { label: "BS in Applied Mathematics (BSAM)", value: "BSAM" },
+                        { label: "BS in Entrepreneurship (BSENTREP)", value: "BSENTREP" },
+                        { label: "BS in Office Administration (BSOA)", value: "BSOA" },
+                        { label: "BS in Secondary Education Major in English (BSED-ENG)", value: "BSED-ENG" },
+                        { label: "BS in Secondary Education Major in Mathematics (BSED-MATH)", value: "BSED-MATH" },
+                      ]  
+                    },
                 { name: "section", label: "Section", type: "text", placeholder: "e.g., BSIT 1-1" },
             ],
         },
@@ -311,7 +330,7 @@ const Form = (props: Props) => {
 
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="max-w-md w-full px-6 py-8">
+            <div className="relative z-50 max-w-[65rem] w-full px-6 py-8">
                 <div className="w-full h-2 rounded-full bg-transparent">
                     <div
                         className="h-full rounded-full"
@@ -334,15 +353,41 @@ const Form = (props: Props) => {
                                 </label>
 
                                 <div className="relative">
-                                    <input
-                                        type={field.type === "password" && showPassword ? "text" : field.type}
+                                {field.type === "select" ? (
+                                        <select
                                         id={field.name}
                                         name={field.name}
-                                        value={formData[field.name as keyof typeof formData]}
-                                        onChange={handleChange}
-                                        className="w-full border-0 border-b border-red-500 pb-2 text-lg focus:ring-0 focus:outline-none focus:border-b-2 bg-transparent pr-10"
-                                        placeholder={field.placeholder ?? ""}
-                                    />
+                                        value={formData[field.name]}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, [field.name]: e.target.value })
+                                        }
+                                        className={`w-full border-0 border-b border-red-500 pb-2 text-lg bg-transparent 
+                                            focus:ring-0 focus:outline-none focus:border-b-2
+                                            ${formData[field.name] === "" ? "text-gray-500" : "text-black"}`}
+                                    >
+                                        <option value="" disabled className="text-gray-500">
+                                            {field.placeholder}
+                                        </option>
+                                    
+                                        {field.options?.map((option) => (
+                                            <option key={option.value} value={option.value} className="text-black">
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    ) : (
+                                        <input
+                                            type={field.type === "password" && showPassword ? "text" : field.type}
+                                            id={field.name}
+                                            name={field.name}
+                                            value={formData[field.name]}
+                                            onChange={handleChange}
+                                            className="w-full border-0 border-b border-red-500 pb-2 text-lg focus:ring-0 focus:outline-none focus:border-b-2 bg-transparent pr-10"
+                                            placeholder={field.placeholder ?? ""}
+                                        />
+                                    )}
+
 
                                     {/* 👁️ Password toggle button */}
                                     {field.name === "password" && (
@@ -438,8 +483,8 @@ const Form = (props: Props) => {
                                     type="button"
                                     onClick={() => setCurrentStep(currentStep - 1)}
                                     style={{ zIndex: 100 }}
-                                    className="text-gray-600 hover:text-gray-800"
-                                >
+                                    className="px-8 py-3 rounded-full transition-colors bg-red-500 text-white hover:bg-red-600"
+                                    >
                                     Previous
                                 </button>
                             )}

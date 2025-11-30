@@ -14,6 +14,19 @@ interface PasswordStrength {
   suggestions: string[];
 }
 
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
+interface Field {
+  name: string;
+  label: string;
+  type: "text" | "email" | "password" | "select";
+  placeholder?: string;
+  options?: SelectOption[];
+}
+
 const Form = (props: Props) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
@@ -221,8 +234,15 @@ const Form = (props: Props) => {
         {
           name: "department",
           label: "Department",
-          type: "text",
-          placeholder: "E.g., College of Information Technology",
+          type: "select",
+          options: [
+            "Information Technology Department",
+            "Marketing Department",
+            "Human Resource Department",
+            "Education Department",
+            "Engineering Department",
+            "Psychology Department",
+          ],        
         },
       ],
     },
@@ -265,9 +285,11 @@ const Form = (props: Props) => {
   const canProceedToNextStep = () => {
     // Check if all fields in current step are filled
     const currentFields = steps[currentStep].fields;
-    const isAllFieldsFilled = currentFields.every(field =>
-      formData[field.name as keyof typeof formData].trim() !== ''
-    );
+    const isAllFieldsFilled = currentFields.every(field => {
+      const value = formData[field.name as keyof typeof formData];
+      return typeof value === "string" && value.trim() !== "";
+    });
+    
 
     // If we're on the password step, also check password strength
     if (currentStep === 1) {
@@ -327,8 +349,8 @@ const Form = (props: Props) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center ">
-      <div className="max-w-md w-full px-6 py-8">
+    <div className="relative min-h-screen flex justify-center py-20 overflow-hidden">
+      <div className="max-w-[32rem] w-full px-6 py-8">
         {/* Loading Bar */}
         <div className="w-[100%] lg:w-[100%] mx-auto  lg:mb-6 mt-4 lg:mt-6">
           <div className="w-full h-2 rounded-full bg-transparent">
@@ -350,9 +372,9 @@ const Form = (props: Props) => {
             Please enter your details.
           </p>
 
-          <form className="space-y-6" style={{ zIndex: 1000 }} onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
             {steps[currentStep].fields.map((field) => (
-              <div key={field.name} className="relative z-50">
+              <div key={field.name} className="relative">
                 <label
                   className="block text-red-500 text-lg mb-1"
                   htmlFor={field.name}
@@ -361,15 +383,51 @@ const Form = (props: Props) => {
                 </label>
 
                 <div className="relative">
-                  <input
-                    type={field.type === "password" && showPassword ? "text" : field.type}
-                    id={field.name}
-                    name={field.name}
-                    value={formData[field.name as keyof typeof formData]}
-                    onChange={handleChange}
-                    className="w-full border-0 border-b border-red-500 pb-2 text-lg focus:ring-0 focus:outline-none focus:border-b-2 bg-transparent pr-10"
-                    placeholder={field.placeholder ?? ""}
-                  />
+                {field.type === "select" ? (
+                        <select
+                        id={field.name}
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={(e) =>
+                          setFormData({ ...formData, [field.name]: e.target.value })
+                        }
+                        className={`w-full border-0 border-b border-red-500 pb-2 text-lg bg-transparent focus:ring-0 focus:outline-none focus:border-b-2 text-medium font-small
+                          ${formData[field.name] ? "text-black-600" : " text-gray-500"}`}
+                      >
+                        <option
+                          value=""
+                          className="text-gray-500"
+                          style={{ color: "#9ca3af" }}   // light gray
+                        >
+                          Select Department
+                        </option>
+                        {field.options?.map((option: string) => (
+                          <option
+                          key={option}
+                          value={option}
+                          className="text-medium font-small text-gray-700"
+                          style={{
+                            color: "black",                        // pink text for selected option in dropdown
+                            backgroundColor: "white",                // removes blue background on some browsers
+                          }}
+                        >
+                          {option}
+                        </option>
+                      ))}
+                      </select>                     
+                      ) : (
+
+                      
+                      <input
+                        type={field.type === "password" && showPassword ? "text" : field.type}
+                        id={field.name}
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={handleChange}
+                        className="w-full border-0 border-b border-red-500 pb-2 text-lg focus:ring-0 focus:outline-none focus:border-b-2 bg-transparent pr-10"
+                        placeholder={field.placeholder ?? " "}
+                      />
+                    )}
 
                   {/* 👁️ Password toggle button */}
                   {field.name === "password" && (
@@ -465,7 +523,7 @@ const Form = (props: Props) => {
                   type="button"
                   onClick={() => setCurrentStep(currentStep - 1)}
                   style={{ zIndex: 100 }}
-                  className="text-gray-600 hover:text-gray-800"
+                  className="px-8 py-3 rounded-full transition-colors bg-red-500 text-white hover:bg-red-600"
                 >
                   Previous
                 </button>
@@ -486,7 +544,12 @@ const Form = (props: Props) => {
           </form>
         </div>
       </div>
-      <Footer />
+      <img
+        src="/images/icons/footer.png"
+        alt="footer"
+        className="absolute bottom-0 left-0 w-full h-auto z-0 pointer-events-none select-none"
+        draggable={false}
+      />
     </div>
   );
 };

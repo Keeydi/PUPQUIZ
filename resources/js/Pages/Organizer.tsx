@@ -221,8 +221,15 @@ const Form = (props: Props) => {
         {
           name: "department",
           label: "Department",
-          type: "text",
-          placeholder: "College of Engineering",
+          type: "select",
+          options: [
+            "Information Technology Department",
+            "Marketing Department",
+            "Human Resource Department",
+            "Education Department",
+            "Engineering Department",
+            "Psychology Department",
+          ],
         },
       ],
     },
@@ -328,7 +335,7 @@ const Form = (props: Props) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center ">
-      <div className="max-w-md w-full px-6 py-8">
+      <div className="max-w-[32rem] w-full px-6 py-8">
         {/* Loading Bar */}
         <div className="w-[100%] lg:w-[100%] mx-auto  lg:mb-6 mt-4 lg:mt-6">
           <div className="w-full h-2 rounded-full bg-transparent">
@@ -448,15 +455,50 @@ const Form = (props: Props) => {
                   {field.label}
                 </label>
                 <div className="relative">
-                  <input
-                    type={field.type === "password" && showPassword ? "text" : field.type}
-                    id={field.name}
-                    name={field.name}
-                    value={formData[field.name as keyof typeof formData]}
-                    onChange={handleChange}
-                    className="w-full border-0 border-b border-red-500 pb-2 text-lg focus:ring-0 focus:outline-none focus:border-b-2 bg-transparent pr-10"
-                    placeholder={field.placeholder ?? " "}
-                  />
+                    {field.type === "select" ? (
+                      <select
+                        id={field.name}
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={(e) =>
+                          setFormData({ ...formData, [field.name]: e.target.value })
+                        }
+                        className={`w-full border-0 border-b border-red-500 pb-2 text-lg bg-transparent focus:ring-0 focus:outline-none focus:border-b-2 text-medium font-small
+                          ${formData[field.name] ? "text-black-600" : " text-gray-500"}`}
+                      >
+                        <option
+                          value=""
+                          className="text-gray-500"
+                          style={{ color: "#9ca3af" }}   // light gray
+                        >
+                          Select Department
+                        </option>
+                        {field.options?.map((option: string) => (
+                          <option
+                          key={option}
+                          value={option}
+                          className="text-medium font-small text-gray-700"
+                          style={{
+                            color: "black",                        // pink text for selected option in dropdown
+                            backgroundColor: "white",                // removes blue background on some browsers
+                          }}
+                        >
+                          {option}
+                        </option>
+                      ))}
+                      </select>
+                    ) : (
+                      
+                      <input
+                        type={field.type === "password" && showPassword ? "text" : field.type}
+                        id={field.name}
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={handleChange}
+                        className="w-full border-0 border-b border-red-500 pb-2 text-lg focus:ring-0 focus:outline-none focus:border-b-2 bg-transparent pr-10"
+                        placeholder={field.placeholder ?? " "}
+                      />
+                    )}
 
                   {/* 👁️ Password toggle button */}
                   {field.name === "password" && (
@@ -553,7 +595,7 @@ const Form = (props: Props) => {
                   type="button"
                   onClick={() => setCurrentStep(currentStep - 1)}
                   style={{ zIndex: 100 }}
-                  className="text-gray-600 hover:text-gray-800"
+                  className="px-8 py-3 rounded-full transition-colors bg-red-500 text-white hover:bg-red-600"
                 >
                   Previous
                 </button>

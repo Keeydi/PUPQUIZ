@@ -58,6 +58,11 @@
   }
 }
 
+html, body {
+  @apply font-poppins;
+  overflow: hidden;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -108,6 +113,14 @@
     @apply inline-block text-xs px-3 py-1.5 rounded bg-green-600 text-white hover:bg-green-700 transition;
   }
 }
+
+/* Yellow highlight when hovering options */
+select option:hover {
+  background-color: #facc15 !important; /* yellow-400 */
+  color: #000 !important;               /* black text */
+}
+
+
 
 
 
